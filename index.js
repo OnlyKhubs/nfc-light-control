@@ -15,8 +15,8 @@ let validTokens = {}; // Per memorizzare i token temporanei
 
 // Database simulato di utenti con email, password e gruppo
 const users = {
-    'user1@example.com': { password: 'password1', group: 'owner' },
-    'user2@example.com': { password: 'password2', group: 'cleaning' }
+    'nando@gmail.com': { password: '1234', group: 'owner' },
+    'ciro@gmail.com': { password: '1234', group: 'cleaning' }
 };
 
 // Orari di accesso per ciascun gruppo
@@ -25,7 +25,7 @@ const groups = {
         schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: '07:00', end: '14:10' } // Accesso consentito dalle 07:00 alle 14:10
+        schedule: { start: '07:00', end: '15:00' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
