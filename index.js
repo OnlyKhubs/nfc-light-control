@@ -21,7 +21,7 @@ const groups = {
         schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: '07:00', end: '14:19' } // Accesso consentito dalle 07:00 alle 14:10
+        schedule: { start: '07:00', end: '14:10' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
@@ -40,8 +40,8 @@ app.get('/', (req, res) => {
 
 // Rotta per gestire il login e la logica di accensione della luce
 app.post('/login', async (req, res) => {
-    const email = req.body.email.trim().toLowerCase();
-    const password = req.body.password.trim();
+    const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
+    const password = req.body.password ? req.body.password.trim() : '';
 
     if (users[email] && users[email].password === password) {
         const userGroup = users[email].group;
