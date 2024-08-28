@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 
 // Database simulato di utenti con email, password e gruppo
 const users = {
-    'admin': { password: 'ciro', group: 'owner' },
-    'pulizie': { password: 'ciro', group: 'cleaning' }
+    'admin@gmail.com': { password: 'ciro', group: 'owner' },
+    'pulizie@gmail.com': { password: 'ciro', group: 'cleaning' }
 };
 
 // Orari di accesso per ciascun gruppo
