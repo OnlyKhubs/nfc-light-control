@@ -83,17 +83,43 @@
         <form id="login-form" method="POST">
             <input type="email" id="email" name="email" placeholder="Email" required><br>
             <input type="password" id="password" name="password" placeholder="Password" required><br>
+            <input type="hidden" id="nfc-token" name="nfc-token"><br>
             <button type="submit">Accedi</button>
         </form>
         <div id="notification" class="notification"></div>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+
+            if (token) {
+                document.getElementById('nfc-token').value = token;
+            } else {
+                alert('Accesso non autorizzato. Si prega di scansionare l\'NFC.');
+                return;
+            }
+
+            const savedEmail = localStorage.getItem('email');
+            const savedPassword = localStorage.getItem('password');
+
+            if (savedEmail && savedPassword) {
+                document.getElementById('email').value = savedEmail;
+                document.getElementById('password').value = savedPassword;
+                document.getElementById('login-form').submit(); // Autoinvio del form
+            }
+        });
+
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
             const form = event.target;
             const formData = new FormData(form);
             const notification = document.getElementById('notification');
+
+            // Salva automaticamente email e password in localStorage
+            localStorage.setItem('email', formData.get('email'));
+            localStorage.setItem('password', formData.get('password'));
 
             fetch('/login', {
                 method: 'POST',
@@ -111,6 +137,9 @@
                 } else if (data.includes('Email o password non corretti')) {
                     notification.className = 'notification error';
                     notification.innerText = 'Email o password non corretti.';
+                    // Rimuovi le credenziali se non sono valide
+                    localStorage.removeItem('email');
+                    localStorage.removeItem('password');
                 } else {
                     notification.className = 'notification error';
                     notification.innerText = 'Errore nell\'accensione della luce. Riprova più tardi.';

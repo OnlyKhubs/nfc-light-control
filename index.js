@@ -3,12 +3,15 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const axios = require('axios');
 const moment = require('moment-timezone');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+let validTokens = {}; // Per memorizzare i token temporanei
 
 // Database simulato di utenti con email, password e gruppo
 const users = {
@@ -26,6 +29,14 @@ const groups = {
     }
 };
 
+// Genera un token per l'NFC e memorizzalo
+app.get('/generate-token', (req, res) => {
+    const token = crypto.randomBytes(16).toString('hex');
+    const expiresAt = moment().add(5, 'minutes').toISOString(); // Scade in 5 minuti
+    validTokens[token] = expiresAt;
+    res.send({ token });
+});
+
 // Funzione per verificare se l'orario corrente rientra nell'intervallo specificato
 function isWithinSchedule(schedule) {
     const now = moment().tz('Europe/Rome');
@@ -39,6 +50,15 @@ function isWithinSchedule(schedule) {
     return now.isBetween(startTime, endTime, null, '[]');
 }
 
+// Funzione per verificare il token NFC
+function isValidToken(token) {
+    const now = moment();
+    if (validTokens[token] && moment(validTokens[token]).isAfter(now)) {
+        return true;
+    }
+    return false;
+}
+
 // Rotta per servire la pagina index.html come pagina iniziale
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -48,9 +68,17 @@ app.get('/', (req, res) => {
 app.post('/login', async (req, res) => {
     const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
     const password = req.body.password ? req.body.password.trim() : '';
+    const token = req.body['nfc-token'];
 
     console.log(`Email ricevuta: ${email}`);
     console.log(`Password ricevuta: ${password}`);
+    console.log(`Token ricevuto: ${token}`);
+
+    if (!isValidToken(token)) {
+        console.log('Token non valido o scaduto');
+        res.send('Accesso non autorizzato.');
+        return;
+    }
 
     if (users[email] && users[email].password === password) {
         const userGroup = users[email].group;
@@ -65,6 +93,7 @@ app.post('/login', async (req, res) => {
             const response = await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
             if (response.status === 200) {
                 res.send('Luce accesa con successo!');
+                delete validTokens[token]; // Rimuove il token dopo l'uso
             } else {
                 throw new Error('Webhook failure');
             }
