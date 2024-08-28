@@ -29,9 +29,19 @@ const groups = {
 function isWithinSchedule(schedule) {
     const now = new Date();
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const [startHour, startMinute] = schedule.start.split(':').map(Number);
+    const [endHour, endMinute] = schedule.end.split(':').map(Number);
+
+    const startTime = new Date(now);
+    startTime.setHours(startHour, startMinute, 0, 0);
+
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMinute, 0, 0);
+
     console.log(`Orario attuale: ${currentTime}`);
     console.log(`Orario consentito: ${schedule.start} - ${schedule.end}`);
-    return currentTime >= schedule.start && currentTime <= schedule.end;
+
+    return now >= startTime && now <= endTime;
 }
 
 // Rotta per servire la pagina index.html come pagina iniziale
