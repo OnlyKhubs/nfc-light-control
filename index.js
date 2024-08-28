@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 
 // Database simulato di utenti con email, password e gruppo
 const users = {
-    'ciro@gmail.com': { password: '1234', group: 'owner' },
-    'impresa@gmail.com': { password: '1234', group: 'cleaning' }
+    'user1@example.com': { password: 'password1', group: 'owner' },
+    'user2@example.com': { password: 'password2', group: 'cleaning' }
 };
 
 // Orari di accesso per ciascun gruppo
@@ -21,7 +21,7 @@ const groups = {
         schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: '07:00', end: '14:13' } // Accesso consentito dalle 07:00 alle 14:10
+        schedule: { start: '07:00', end: '14:10' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
@@ -40,7 +40,8 @@ app.get('/', (req, res) => {
 
 // Rotta per gestire il login e la logica di accensione della luce
 app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    const email = req.body.email.trim().toLowerCase();
+    const password = req.body.password.trim();
 
     if (users[email] && users[email].password === password) {
         const userGroup = users[email].group;
