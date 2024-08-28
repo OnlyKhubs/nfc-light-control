@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const axios = require('axios');
 
 const app = express();
@@ -8,31 +9,34 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Database simulato di utenti con email, password e gruppo
 const users = {
     'user1@example.com': { password: 'password1', group: 'owner' },
     'user2@example.com': { password: 'password2', group: 'cleaning' }
 };
 
+// Orari di accesso per ciascun gruppo
 const groups = {
     owner: {
         schedule: { start: 0, end: 24 } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: 7, end: 12 } // Accesso dalle 7:00 alle 12:00
+        schedule: { start: 7, end: 12 } // Accesso consentito dalle 7:00 alle 12:00
     }
 };
 
+// Funzione per verificare se l'orario corrente rientra nell'intervallo specificato
 function isWithinSchedule(schedule) {
     const currentHour = new Date().getHours();
     return currentHour >= schedule.start && currentHour < schedule.end;
 }
 
-// Rotta per visualizzare la pagina di login
-app.get('/login', (req, res) => {
-    res.sendFile(__dirname + '/login.html');
+// Rotta per servire la pagina index.html come pagina iniziale
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Rotta per gestire il login
+// Rotta per gestire il login e la logica di accensione della luce
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
