@@ -7,12 +7,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
+// Rotta per la radice, che mostra un messaggio di benvenuto
+app.get('/', (req, res) => {
+    res.send('Benvenuto nel server NFC Light Control!');
+});
+
+// Rotta per gestire le richieste POST su /nfc-scan
 app.post('/nfc-scan', async (req, res) => {
     const { userId } = req.body;
 
     if (userId === 'authorized_user_id') {
         try {
-            // Invia una richiesta POST al webhook di Home Assistant per accendere la luce
             await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
             res.status(200).send('Luce accesa');
         } catch (error) {
