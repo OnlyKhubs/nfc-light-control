@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 // Database simulato di utenti con email, password e gruppo
 const users = {
     'ciro@gmail.com': { password: '1234', group: 'owner' },
-    'impresa@gmail.comm': { password: '1234', group: 'cleaning' }
+    'impresa@gmail.com': { password: '1234', group: 'cleaning' }
 };
 
 // Orari di accesso per ciascun gruppo
@@ -21,7 +21,7 @@ const groups = {
         schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: '07:00', end: '14:12' } // Accesso consentito dalle 07:00 alle 14:10
+        schedule: { start: '07:00', end: '14:13' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
