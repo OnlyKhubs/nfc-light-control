@@ -11,24 +11,26 @@ app.use(bodyParser.json());
 
 // Database simulato di utenti con email, password e gruppo
 const users = {
-    'user1@example.com': { password: 'password1', group: 'owner' },
-    'user2@example.com': { password: 'password2', group: 'cleaning' }
+    'ciro@gmail.com': { password: '1234', group: 'owner' },
+    'impresa@gmail.comm': { password: '1234', group: 'cleaning' }
 };
 
 // Orari di accesso per ciascun gruppo
 const groups = {
     owner: {
-        schedule: { start: 0, end: 24 } // Accesso sempre consentito
+        schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: 7, end: 12 } // Accesso consentito dalle 7:00 alle 12:00
+        schedule: { start: '07:00', end: '14:12' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
 // Funzione per verificare se l'orario corrente rientra nell'intervallo specificato
 function isWithinSchedule(schedule) {
-    const currentHour = new Date().getHours();
-    return currentHour >= schedule.start && currentHour < schedule.end;
+    const now = new Date();
+    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    return currentTime >= schedule.start && currentTime <= schedule.end;
 }
 
 // Rotta per servire la pagina index.html come pagina iniziale
