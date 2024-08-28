@@ -20,7 +20,7 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            width: 320px;
             text-align: center;
         }
 
@@ -37,6 +37,8 @@
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
         }
 
         .login-container button {
@@ -59,6 +61,7 @@
             padding: 10px;
             border-radius: 4px;
             display: none;
+            font-size: 14px;
         }
 
         .notification.success {
@@ -98,6 +101,7 @@
             })
             .then(response => response.text())
             .then(data => {
+                notification.style.display = 'block';
                 if (data.includes('Luce accesa con successo!')) {
                     notification.className = 'notification success';
                     notification.innerText = 'Luce accesa con successo!';
@@ -111,7 +115,6 @@
                     notification.className = 'notification error';
                     notification.innerText = 'Errore nell\'accensione della luce. Riprova più tardi.';
                 }
-                notification.style.display = 'block';
             });
         });
     </script>

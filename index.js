@@ -21,7 +21,7 @@ const groups = {
         schedule: { start: '00:00', end: '23:59' } // Accesso sempre consentito
     },
     cleaning: {
-        schedule: { start: '07:00', end: '14:10' } // Accesso consentito dalle 07:00 alle 14:10
+        schedule: { start: '07:00', end: '14:19' } // Accesso consentito dalle 07:00 alle 14:10
     }
 };
 
@@ -53,8 +53,13 @@ app.post('/login', async (req, res) => {
 
         try {
             const response = await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
-            res.send('Luce accesa con successo!');
+            if (response.status === 200) {
+                res.send('Luce accesa con successo!');
+            } else {
+                throw new Error('Webhook failure');
+            }
         } catch (error) {
+            console.error('Errore durante la richiesta al webhook:', error.message);
             res.send('Errore nell\'accensione della luce. Riprova più tardi.');
         }
     } else {
