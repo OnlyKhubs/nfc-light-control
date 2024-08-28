@@ -31,10 +31,13 @@ const groups = {
 
 // Genera un token per l'NFC e memorizzalo
 app.get('/generate-token', (req, res) => {
+    console.log('Scansione NFC rilevata');
     const token = crypto.randomBytes(16).toString('hex');
     const expiresAt = moment().add(5, 'minutes').toISOString(); // Scade in 5 minuti
     validTokens[token] = expiresAt;
-    res.send({ token });
+
+    console.log(`Token generato: ${token}, reindirizzamento a /login`);
+    res.redirect(`/login?token=${token}`);
 });
 
 // Funzione per verificare se l'orario corrente rientra nell'intervallo specificato
@@ -59,8 +62,16 @@ function isValidToken(token) {
     return false;
 }
 
-// Rotta per servire la pagina index.html come pagina iniziale
-app.get('/', (req, res) => {
+// Rotta per servire la pagina di login con validazione del token
+app.get('/login', (req, res) => {
+    const token = req.query.token;
+
+    // Verifica se il token è valido
+    if (!isValidToken(token)) {
+        return res.send('Token non valido o scaduto.');
+    }
+
+    // Servi la pagina di login (index.html)
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
