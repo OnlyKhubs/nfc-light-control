@@ -29,7 +29,8 @@ const groups = {
 function isWithinSchedule(schedule) {
     const now = new Date();
     const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
+    console.log(`Orario attuale: ${currentTime}`);
+    console.log(`Orario consentito: ${schedule.start} - ${schedule.end}`);
     return currentTime >= schedule.start && currentTime <= schedule.end;
 }
 
@@ -43,8 +44,12 @@ app.post('/login', async (req, res) => {
     const email = req.body.email ? req.body.email.trim().toLowerCase() : '';
     const password = req.body.password ? req.body.password.trim() : '';
 
+    console.log(`Email ricevuta: ${email}`);
+    console.log(`Password ricevuta: ${password}`);
+
     if (users[email] && users[email].password === password) {
         const userGroup = users[email].group;
+        console.log(`Utente autenticato nel gruppo: ${userGroup}`);
 
         if (!isWithinSchedule(groups[userGroup].schedule)) {
             res.send('Non puoi accedere in questo momento.');
@@ -63,6 +68,7 @@ app.post('/login', async (req, res) => {
             res.send('Errore nell\'accensione della luce. Riprova più tardi.');
         }
     } else {
+        console.log('Credenziali non valide');
         res.send('Email o password non corretti.');
     }
 });
