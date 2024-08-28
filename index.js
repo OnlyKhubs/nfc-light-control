@@ -7,21 +7,23 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-// Rotta per la radice, che mostra un messaggio di benvenuto
 app.get('/', (req, res) => {
     res.send('Benvenuto nel server NFC Light Control!');
 });
 
-// Rotta per gestire le richieste POST su /nfc-scan
 app.post('/nfc-scan', async (req, res) => {
     const { userId } = req.body;
 
+    console.log(`Ricevuto userId: ${userId}`);  // Aggiunto per debug
+
     if (userId === 'authorized_user_id') {
         try {
-            await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
+            console.log('Invio richiesta al webhook...');
+            const response = await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
+            console.log('Risposta dal webhook:', response.status);  // Aggiunto per debug
             res.status(200).send('Luce accesa');
         } catch (error) {
-            console.error(error);
+            console.error('Errore nell\'invio al webhook:', error.message);
             res.status(500).send('Errore nell\'accensione della luce');
         }
     } else {
