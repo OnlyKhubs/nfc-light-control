@@ -28,7 +28,7 @@ app.get('/accendi-luce', (req, res) => {
             </body>
         </html>
     `);
-});
+}); 
 
 // Rotta POST per gestire l'accensione della luce tramite NFC
 app.post('/nfc-scan', async (req, res) => {
