@@ -128,9 +128,9 @@
             .then(response => response.text())
             .then(data => {
                 notification.style.display = 'block';
-                if (data.includes('Luce accesa con successo!')) {
+                if (data.includes('Comando avviato con successo!')) {
                     notification.className = 'notification success';
-                    notification.innerText = 'Luce accesa con successo!';
+                    notification.innerText = 'Comando avviato con successo!';
                 } else if (data.includes('Non puoi accedere in questo momento')) {
                     notification.className = 'notification error';
                     notification.innerText = 'Non puoi accedere in questo momento.';

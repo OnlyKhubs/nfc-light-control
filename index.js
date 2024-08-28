@@ -101,9 +101,9 @@ app.post('/login', async (req, res) => {
         }
 
         try {
-            const response = await axios.post('https://dipnoan-bee-5481.dataplicity.io/api/webhook/accendi_luce');
+            const response = await axios.post('http://searchdomotica.duckdns.org:8125/api/webhook/Nando');
             if (response.status === 200) {
-                res.send('Luce accesa con successo!');
+                res.send('Comando avviato con successo!');
                 delete validTokens[token]; // Rimuove il token dopo l'uso
             } else {
                 throw new Error('Webhook failure');
