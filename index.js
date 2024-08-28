@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const axios = require('axios');
+const moment = require('moment-timezone');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,21 +28,15 @@ const groups = {
 
 // Funzione per verificare se l'orario corrente rientra nell'intervallo specificato
 function isWithinSchedule(schedule) {
-    const now = new Date();
-    const currentTime = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    const [startHour, startMinute] = schedule.start.split(':').map(Number);
-    const [endHour, endMinute] = schedule.end.split(':').map(Number);
-
-    const startTime = new Date(now);
-    startTime.setHours(startHour, startMinute, 0, 0);
-
-    const endTime = new Date(now);
-    endTime.setHours(endHour, endMinute, 0, 0);
+    const now = moment().tz('Europe/Rome');
+    const currentTime = now.format('HH:mm');
+    const startTime = moment.tz(`${now.format('YYYY-MM-DD')} ${schedule.start}`, 'YYYY-MM-DD HH:mm', 'Europe/Rome');
+    const endTime = moment.tz(`${now.format('YYYY-MM-DD')} ${schedule.end}`, 'YYYY-MM-DD HH:mm', 'Europe/Rome');
 
     console.log(`Orario attuale: ${currentTime}`);
     console.log(`Orario consentito: ${schedule.start} - ${schedule.end}`);
 
-    return now >= startTime && now <= endTime;
+    return now.isBetween(startTime, endTime, null, '[]');
 }
 
 // Rotta per servire la pagina index.html come pagina iniziale
