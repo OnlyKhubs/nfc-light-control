@@ -9,7 +9,7 @@ app.use(bodyParser.json());
 
 // Rotta per la radice, mostra un messaggio di benvenuto
 app.get('/', (req, res) => {
-    res.send('Benvenuto nel server NFC Light Control!');
+    res.send('Benvenuto nel server NFC Light Control!!!!!');
 });
 
 // Rotta per la pagina HTML per accendere la luce
